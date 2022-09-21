@@ -17,7 +17,7 @@ describe('AddedThread entities', () => {
       owner: 'not me',
     };
 
-    expect(() => new AddedThread(payload)).toThrowError('ADDED_THREAD.DATA_TYPES_OF_PAYLOAD_IS_NOT_VALID');
+    expect(() => new AddedThread(payload)).toThrowError('ADDED_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
   it('should create addedThread object correctly', () => {
