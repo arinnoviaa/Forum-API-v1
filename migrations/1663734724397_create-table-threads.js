@@ -1,40 +1,43 @@
 /* eslint-disable camelcase */
 
-exports.up = pgm => {
-  pgm.createTable('threads', {
-    id: {
-      type: 'VARCHAR(50)',
-      primaryKey: true,
+exports.up = (pgm) => {
+  pgm.createTable(
+    'threads',
+    {
+      id: {
+        type: 'VARCHAR(50)',
+        primaryKey: true,
+      },
+      title: {
+        type: 'VARCHAR(50)',
+        notNull: true,
+      },
+      body: {
+        type: 'TEXT',
+        notNull: true,
+      },
+      owner: {
+        type: 'VARCHAR(50)',
+        notNull: true,
+        references: 'users',
+        referencesConstraintName: 'fk_threads_users',
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      },
+      date: {
+        type: 'TIMESTAMP',
+        default: 'NOW()',
+      },
     },
-    title: {
-      type: 'VARCHAR(50)',
-      notNull: true,
+    {
+      ifNotExists: true,
     },
-    body: {
-      type: 'TEXT',
-      notNull: true,
-    },
-    owner: {
-      type: 'VARCHAR(50)',
-      notNull: true,
-      references: 'users',
-      referencesConstraintName: 'fk_threads_users',
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    },
-    date: {
-      type: 'TIMESTAMP',
-      default: 'NOW()',
-    }
-  },
-  {
-    ifNotExists: true,
-  });
+  );
 };
 
-exports.down = pgm => {
+exports.down = (pgm) => {
   pgm.dropTable('threads', {
-      ifExists: true,
-      cascade: true,
+    ifExists: true,
+    cascade: true,
   });
 };

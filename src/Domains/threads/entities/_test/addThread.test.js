@@ -1,10 +1,10 @@
-const AddThread = require('../AddThread');
+const AddThread = require('../addThread');
 
 describe('a AddThread entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      title: 'abc',
-      body: 'abc',
+      title: 'ini adalah title dari thread',
+      body: 'ini adalah body dari thread',
     };
 
     expect(() => new AddThread(payload)).toThrowError('ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
@@ -20,10 +20,10 @@ describe('a AddThread entities', () => {
     expect(() => new AddThread(payload)).toThrowError('ADD_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
-  it('should throw error when title contains more than 250 character', () => {
+  it('should throw error when title contains more than 50 character', () => {
     const payload = {
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate lobortis ex, ut iaculis diam porttitor non. Praesent vestibulum leo elementum neque vulputate, et auctor mauris pellentesque. Integer vel sodales ex, nec ullamcorper mauris tortor.',
-      body: 'Dicoding Indonesia',
+      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate lobortis ex, ut iaculis diam porttitor non.',
+      body: 'Ini adalah body thread',
       owner: 'user-123',
     };
 
@@ -32,8 +32,8 @@ describe('a AddThread entities', () => {
 
   it('should create new thread object correctly', () => {
     const payload = {
-      title: 'sebuah thread',
-      body: 'Dicoding Indonesia',
+      title: 'ini adalah title',
+      body: 'ini adalah body yang benar',
       owner: 'user-123',
     };
 
