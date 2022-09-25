@@ -6,8 +6,8 @@ const ThreadsTableTestHelper = {
   async addThread(
     {
       id = 'thread-123',
-      title = 'title thread test',
-      body = 'body thread test',
+      title = 'sebuah title',
+      body = 'sebuah body',
       owner = 'user-123',
     },
   ) {

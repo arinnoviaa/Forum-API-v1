@@ -21,7 +21,7 @@ class GetThread {
       if (!item) {
         throw new Error('GET_THREAD.PAYLOAD_DID_NOT_CONTAIN_NEEDED_PROPERTY');
       }
-      if (typeof item !== 'string') {
+      if (typeof id !== 'string' || typeof title !== 'string' || typeof body !== 'string' || typeof username !== 'string') {
         throw new Error('GET_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
       }
     });

@@ -6,7 +6,7 @@ const CommentsTableTestHelper = {
   async addComment(
     {
       id = 'comment-123',
-      content = 'this is a comment test',
+      content = 'sebuah komentar',
       owner = 'user-123',
       thread = 'thread-123',
     },
