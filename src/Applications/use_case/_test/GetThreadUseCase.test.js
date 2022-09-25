@@ -11,34 +11,34 @@ describe('GetThreadUseCase', () => {
 
     const thread = {
       id: 'thread-123',
-      title: 'ini title thread',
-      body: 'ini body thread',
-      date: '20201010',
-      username: 'mrdzick',
+      title: 'sebuah title',
+      body: 'sebuah body',
+      date: '20220909',
+      username: 'dicoding',
     };
 
     const comments = [
       {
         id: 'comment-123',
-        username: 'mrdzick',
-        date: '20211010',
-        content: 'ini konten',
+        username: 'dicoding',
+        date: '20220909',
+        content: 'sebuah komentar',
         is_deleted: false,
       },
     ];
 
     const expectedThread = {
       id: 'thread-123',
-      title: 'ini title thread',
-      body: 'ini body thread',
-      date: '20201010',
-      username: 'mrdzick',
+      title: 'sebuah title',
+      body: 'sebuah body',
+      date: '20220909',
+      username: 'dicoding',
       comments: [
         {
           id: 'comment-123',
-          username: 'mrdzick',
-          date: '20211010',
-          content: 'ini konten',
+          username: 'dicoding',
+          date: '20220909',
+          content: 'sebuah komentar',
           is_deleted: false,
         },
       ],

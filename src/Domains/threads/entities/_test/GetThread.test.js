@@ -15,7 +15,7 @@ describe('GetThread entities', () => {
       id: 'thread-123',
       title: true,
       body: 'sebuah body',
-      date: '20-11-2021',
+      date: '22-09-2022',
       username: 123,
     };
 
@@ -29,7 +29,7 @@ describe('GetThread entities', () => {
       id: 'thread-123',
       title: 'sebuah title',
       body: 'sebuah body',
-      date: '20-11-2021',
+      date: '22-09-2022',
       username: 'user-123',
     };
 

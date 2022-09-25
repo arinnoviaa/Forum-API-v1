@@ -134,7 +134,6 @@ describe('CommentRepositoryPostgres', () => {
         content: 'sebuah komentar',
       };
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
-
       await CommentsTableTestHelper.addComment({});
 
       // Action
