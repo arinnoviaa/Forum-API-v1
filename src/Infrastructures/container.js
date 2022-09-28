@@ -1,5 +1,4 @@
 /* istanbul ignore file */
-
 const { createContainer } = require('instances-container');
 
 // external agency
@@ -63,28 +62,6 @@ container.register([
     },
   },
   {
-    key: PasswordHash.name,
-    Class: BcryptPasswordHash,
-    parameter: {
-      dependencies: [
-        {
-          concrete: bcrypt,
-        },
-      ],
-    },
-  },
-  {
-    key: AuthenticationTokenManager.name,
-    Class: JwtTokenManager,
-    parameter: {
-      dependencies: [
-        {
-          concrete: Jwt.token,
-        },
-      ],
-    },
-  },
-  {
     key: ThreadRepository.name,
     Class: ThreadRepositoryPostgres,
     parameter: {
@@ -108,6 +85,28 @@ container.register([
         },
         {
           concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: PasswordHash.name,
+    Class: BcryptPasswordHash,
+    parameter: {
+      dependencies: [
+        {
+          concrete: bcrypt,
+        },
+      ],
+    },
+  },
+  {
+    key: AuthenticationTokenManager.name,
+    Class: JwtTokenManager,
+    parameter: {
+      dependencies: [
+        {
+          concrete: Jwt.token,
         },
       ],
     },

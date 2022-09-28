@@ -1,46 +1,33 @@
 const AddThread = require('../AddThread');
 
-describe('a AddThread entities', () => {
+describe('an addThread entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     // Arrange
     const payload = {
-      title: 'sebuah title',
-      body: 'sebuah body',
+      title: "We think you'll love this",
     };
 
-    // Action & Assert
+    // Action and assert
     expect(() => new AddThread(payload)).toThrowError('ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
-  it('should throw error when payload did not meet data type specification', () => {
+  it('should throw error when payload did not meet data type spesification', () => {
     // Arrange
     const payload = {
-      title: 123,
-      body: true,
-      owner: 'user-123',
+      title: "We think you'll love this",
+      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      owner: [],
     };
 
-    // Action & Assert
+    // Action and assrert
     expect(() => new AddThread(payload)).toThrowError('ADD_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
-  it('should throw error when title contains more than 50 character', () => {
+  it('should create addThread object correctly', () => {
     // Arrange
     const payload = {
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate lobortis ex, ut iaculis diam porttitor non.',
-      body: 'sebuah body',
-      owner: 'user-123',
-    };
-
-    // Action & Assert
-    expect(() => new AddThread(payload)).toThrowError('ADD_THREAD.TITLE_LIMIT_CHAR');
-  });
-
-  it('should create new thread object correctly', () => {
-    // Arrange
-    const payload = {
-      title: 'sebuah body',
-      body: 'sebuah body',
+      title: "We think you'll love this",
+      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       owner: 'user-123',
     };
 

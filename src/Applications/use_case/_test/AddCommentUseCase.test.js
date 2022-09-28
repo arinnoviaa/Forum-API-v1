@@ -8,11 +8,10 @@ describe('AddCommentUseCase', () => {
   it('should orchestrating the add comment action correctly', async () => {
     // Arrange
     const useCasePayload = {
-      content: 'sebuah komentar',
-      owner: 'user-123',
       thread: 'thread-123',
+      content: 'nice comment, right?',
+      owner: 'user-123',
     };
-
     const expectedAddedComment = new AddedComment({
       id: 'comment-123',
       content: useCasePayload.content,
@@ -20,12 +19,11 @@ describe('AddCommentUseCase', () => {
     });
 
     /** creating dependency of use case */
-    const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
+    const mockThreadRepository = new ThreadRepository();
 
     /** mocking needed function */
-    mockThreadRepository.verifyAvailableThread = jest.fn()
-      .mockImplementation(() => Promise.resolve());
+    mockThreadRepository.verifyAvailableThread = jest.fn(() => Promise.resolve());
     mockCommentRepository.addComment = jest.fn()
       .mockImplementation(() => Promise.resolve(expectedAddedComment));
 
@@ -42,9 +40,9 @@ describe('AddCommentUseCase', () => {
     expect(addedComment).toStrictEqual(expectedAddedComment);
     expect(mockThreadRepository.verifyAvailableThread).toBeCalledWith(useCasePayload.thread);
     expect(mockCommentRepository.addComment).toBeCalledWith(new AddComment({
+      thread: useCasePayload.thread,
       content: useCasePayload.content,
       owner: useCasePayload.owner,
-      thread: useCasePayload.thread,
     }));
   });
 });

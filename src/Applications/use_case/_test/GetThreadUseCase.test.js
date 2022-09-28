@@ -8,38 +8,47 @@ describe('GetThreadUseCase', () => {
     const useCasePayload = {
       threadId: 'thread-123',
     };
-
     const thread = {
       id: 'thread-123',
-      title: 'sebuah title',
-      body: 'sebuah body',
+      title: "We think you'll love this",
+      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       date: '20220909',
-      username: 'dicoding',
+      username: 'chilltude',
     };
-
     const comments = [
       {
         id: 'comment-123',
-        username: 'dicoding',
+        username: 'chilltude',
         date: '20220909',
-        content: 'sebuah komentar',
+        content: 'nice comment, right?',
         is_deleted: false,
       },
+      {
+        id: 'comment-123',
+        username: 'chilltude',
+        date: '20220909',
+        content: 'ugh!',
+        is_deleted: true,
+      },
     ];
-
     const expectedThread = {
       id: 'thread-123',
-      title: 'sebuah title',
-      body: 'sebuah body',
+      title: "We think you'll love this",
+      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       date: '20220909',
-      username: 'dicoding',
+      username: 'chilltude',
       comments: [
         {
           id: 'comment-123',
-          username: 'dicoding',
+          username: 'chilltude',
           date: '20220909',
-          content: 'sebuah komentar',
-          is_deleted: false,
+          content: 'nice comment, right?',
+        },
+        {
+          id: 'comment-123',
+          username: 'chilltude',
+          date: '20220909',
+          content: '**komentar telah dihapus**',
         },
       ],
     };
@@ -49,8 +58,7 @@ describe('GetThreadUseCase', () => {
     const mockCommentRepository = new CommentRepository();
 
     /** mocking needed function */
-    mockThreadRepository.verifyAvailableThread = jest.fn()
-      .mockImplementation(() => Promise.resolve());
+    mockThreadRepository.verifyAvailableThread = jest.fn(() => Promise.resolve());
     mockThreadRepository.getThreadById = jest.fn()
       .mockImplementation(() => Promise.resolve(thread));
     mockCommentRepository.getCommentsThread = jest.fn()
@@ -63,10 +71,10 @@ describe('GetThreadUseCase', () => {
     });
 
     // Action
-    const actualGetThread = await getThreadUseCase.execute(useCasePayload);
+    const getThread = await getThreadUseCase.execute(useCasePayload);
 
     // Assert
-    expect(actualGetThread).toEqual(expectedThread);
+    expect(getThread).toEqual(expectedThread);
     expect(mockThreadRepository.verifyAvailableThread)
       .toHaveBeenCalledWith(useCasePayload.threadId);
     expect(mockThreadRepository.getThreadById)

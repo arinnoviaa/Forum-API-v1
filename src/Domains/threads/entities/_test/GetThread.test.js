@@ -1,25 +1,27 @@
 const GetThread = require('../GetThread');
 
-describe('GetThread entities', () => {
+describe('a getThread entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     // Arrange
-    const payload = {};
+    const payload = {
+      title: "We think you'll love this",
+    };
 
-    // Action & Assert
-    expect(() => new GetThread(payload)).toThrowError('GET_THREAD.PAYLOAD_DID_NOT_CONTAIN_NEEDED_PROPERTY');
+    // Action and assret
+    expect(() => new GetThread(payload)).toThrowError('GET_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
   it('should throw error when payload did not meet data types specification', () => {
     // Arrange
     const payload = {
       id: 'thread-123',
-      title: true,
-      body: 'sebuah body',
+      title: "We think you'll love this",
+      body: true,
       date: '22-09-2022',
-      username: 123,
+      username: 'user-123',
     };
 
-    // Action & Assert
+    // Action and assert
     expect(() => new GetThread(payload)).toThrowError('GET_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
@@ -27,8 +29,8 @@ describe('GetThread entities', () => {
     // Arrange
     const payload = {
       id: 'thread-123',
-      title: 'sebuah title',
-      body: 'sebuah body',
+      title: "We think you'll love this",
+      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       date: '22-09-2022',
       username: 'user-123',
     };
@@ -38,7 +40,7 @@ describe('GetThread entities', () => {
       id, title, body, date, username,
     } = new GetThread(payload);
 
-    // Assert
+    // assert
     expect(id).toEqual(payload.id);
     expect(title).toEqual(payload.title);
     expect(body).toEqual(payload.body);

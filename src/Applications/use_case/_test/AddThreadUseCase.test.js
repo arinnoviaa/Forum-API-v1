@@ -7,13 +7,12 @@ describe('AddThreadUseCase', () => {
   it('should orcestrating the add thread action correctly', async () => {
     // Arrange
     const useCasePayload = {
-      title: 'sebuah title',
-      body: 'sebuah body',
+      title: "We think you'll love this",
+      body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       owner: 'user-123',
     };
-
     const expectedAddedThread = new AddedThread({
-      id: 'id-123',
+      id: 'thread-123',
       title: useCasePayload.title,
       owner: useCasePayload.owner,
     });

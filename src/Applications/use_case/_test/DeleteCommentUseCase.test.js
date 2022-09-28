@@ -6,7 +6,7 @@ describe('DeleteCommentUseCase', () => {
   it('should orchestrating the delete comment action correctly', async () => {
   // Arrange
     const useCasePayload = {
-      commentId: 'comment-123',
+      comment: 'comment-123',
       thread: 'thread-123',
       owner: 'user-123',
     };
@@ -38,10 +38,10 @@ describe('DeleteCommentUseCase', () => {
     expect(mockThreadRepository.verifyAvailableThread)
       .toHaveBeenCalledWith(useCasePayload.thread);
     expect(mockCommentRepository.verifyAvailableComment)
-      .toHaveBeenCalledWith(useCasePayload.commentId);
+      .toHaveBeenCalledWith(useCasePayload.comment);
     expect(mockCommentRepository.verifyCommentOwner)
-      .toHaveBeenCalledWith(useCasePayload.commentId, useCasePayload.owner);
+      .toHaveBeenCalledWith(useCasePayload.comment, useCasePayload.owner);
     expect(mockCommentRepository.deleteComment)
-      .toHaveBeenCalledWith(useCasePayload.commentId);
+      .toHaveBeenCalledWith(useCasePayload.comment);
   });
 });

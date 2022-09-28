@@ -1,179 +1,194 @@
-const pool = require('../../database/postgres/pool')
-const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper')
-const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
-const ServerTestHelper = require('../../../../tests/ServerTestHelper')
-const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper')
-const container = require('../../container')
-const createServer = require('../createServer')
+const pool = require('../../database/postgres/pool');
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
+const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
+const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
+const ServerTableTestHelper = require('../../../../tests/ServerTestHelper');
+const container = require('../../container');
+const createServer = require('../createServer');
 
-describe('/threads/threadId/comments endpoint', () => {
-    beforeAll(async () => {
-        await UsersTableTestHelper.addUser({})
-    })
-    afterEach(async () => {
-        await CommentsTableTestHelper.cleanTable()
-        await ThreadsTableTestHelper.cleanTable()
-    })
+describe('/threads/{threadId}/comments endpoint', () => {
+  beforeAll(async () => {
+    await UsersTableTestHelper.addUser({});
+  });
 
-    afterAll(async () => {
-        await UsersTableTestHelper.cleanTable()
-        await pool.end()
-    })
-    describe('when POST /threads/threadId/comments', () => {
-        it('should response 201 and persisted comment', async () => {
-            // Arrange
-            const payload = {
-                content: 'ini isi komentar'
-            }
+  afterEach(async () => {
+    await CommentsTableTestHelper.cleanTable();
+    await ThreadsTableTestHelper.cleanTable();
+  });
 
-            const server = await createServer(container)
+  afterAll(async () => {
+    await UsersTableTestHelper.cleanTable();
+    await pool.end();
+  });
 
-            await ThreadsTableTestHelper.addThread({}) // Add a thread
+  describe('when POST /threads/{threadId}/comments', () => {
+    it('should response 201 and persisted comment', async () => {
+      // Arrange
+      const payload = {
+        content: 'nice comment, right?',
+      };
+      const server = await createServer(container);
+      await ThreadsTableTestHelper.addThread({});
+      const accessToken = await ServerTableTestHelper.getAccessToken();
 
-            const accessToken = await ServerTestHelper.getAccessToken()
-            // Action
-            const response = await server.inject({
-                url: '/threads/thread-123/comments',
-                method: 'POST',
-                payload,
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
+      // Action
+      const response = await server.inject({
+        url: '/threads/thread-123/comments',
+        method: 'POST',
+        payload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-            // Assert
-            const responseJson = JSON.parse(response.payload)
-            expect(response.statusCode).toEqual(201)
-            expect(responseJson.status).toEqual('success')
-            expect(responseJson.data.addedComment).toBeDefined()
-            expect(responseJson.data.addedComment.content).toEqual(payload.content)
-        })
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(201);
+      expect(responseJson.status).toEqual('success');
+      expect(responseJson.data).toBeDefined();
+    });
 
-        it('should response 404 when adding comment to a thread that is not available', async () => {
-            // Assert
-            const payload = {
-                content: 'ini isi komentar'
-            }
+    it('should response 401 when payload not had access token', async () => {
+      // Arrange
+      const server = await createServer(container);
 
-            const server = await createServer(container)
+      // Action
+      const response = await server.inject({
+        method: 'POST',
+        url: '/threads/thread-123/comments',
+        payload: {},
+      });
 
-            const accessToken = await ServerTestHelper.getAccessToken()
-            // Action
-            const response = await server.inject({
-                url: '/threads/thread-123/comments',
-                method: 'POST',
-                payload,
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+    });
 
-            // Assert
-            const responseJson = JSON.parse(response.payload)
-            expect(response.statusCode).toEqual(404)
-            expect(responseJson.status).toEqual('fail')
-        })
+    it('should response 400 when payload not contain needed property', async () => {
+    // Arrange
+      const payload = {};
+      const server = await createServer(container);
+      await ThreadsTableTestHelper.addThread({});
+      const accessToken = await ServerTableTestHelper.getAccessToken();
 
-        it('should response 400 when adding comment with bad payload', async () => {
-            const payload = {
-                content: ''
-            }
+      // Action
+      const response = await server.inject({
+        url: '/threads/thread-123/comments',
+        method: 'POST',
+        payload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-            const server = await createServer(container)
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(400);
+      expect(responseJson.status).toEqual('fail');
+    });
 
-            await ThreadsTableTestHelper.addThread({}) // Add a thread
+    it('should response 400 when payload not meet data type specification', async () => {
+    // Arrange
+      const payload = {
+        content: true,
+      };
+      const server = await createServer(container);
+      await ThreadsTableTestHelper.addThread({});
+      const accessToken = await ServerTableTestHelper.getAccessToken();
 
-            const accessToken = await ServerTestHelper.getAccessToken()
-            // Action
-            const response = await server.inject({
-                url: '/threads/thread-123/comments',
-                method: 'POST',
-                payload,
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
+      // Action
+      const response = await server.inject({
+        url: '/threads/thread-123/comments',
+        method: 'POST',
+        payload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-            // Assert
-            const responseJson = JSON.parse(response.payload)
-            expect(response.statusCode).toEqual(400)
-            expect(responseJson.status).toEqual('fail')
-        })
-    })
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(400);
+      expect(responseJson.status).toEqual('fail');
+    });
 
-    describe('when DELETE /threads/{threadId}/comments/{commentId}', () => {
-        it('should response 404 when trying to delete comment where thread is not available', async () => {
-            // Arrange
-            const threadId = 'thread-666'
-            const commentId = 'comment-123'
+    it('should response 404 when thread not available', async () => {
+    // Arrange
+      const payload = {
+        content: 'nice comment, right?',
+      };
+      const server = await createServer(container);
+      const accessToken = await ServerTableTestHelper.getAccessToken();
 
-            const server = await createServer(container)
+      // Action
+      const response = await server.inject({
+        url: '/threads/thread-123/comments',
+        method: 'POST',
+        payload,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-            const accessToken = await ServerTestHelper.getAccessToken()
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+    });
+  });
 
-            // Action
-            const response = await server.inject({
-                url: `/threads/${threadId}/comments/${commentId}`,
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
+  describe('when DELETE /threads/{threadId}/comments/{commentId}', () => {
+    it('should response 404 when comment not found', async () => {
+    // Arrange
+      const threadId = 'thread-123';
+      const commentId = 'comment-9797';
 
-            // Assert
-            const responseJson = JSON.parse(response.payload)
-            expect(response.statusCode).toEqual(404)
-            expect(responseJson.status).toEqual('fail')
-        })
-        it('should response 404 when trying to delete comment where comment is not available', async () => {
-            // Arrange
-            const threadId = 'thread-123'
-            const commentId = 'comment-666'
+      const server = await createServer(container);
 
-            const server = await createServer(container)
+      await ThreadsTableTestHelper.addThread({});
 
-            await ThreadsTableTestHelper.addThread({})
+      const accessToken = await ServerTableTestHelper.getAccessToken();
 
-            const accessToken = await ServerTestHelper.getAccessToken()
+      // Action
+      const response = await server.inject({
+        url: `/threads/${threadId}/comments/${commentId}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-            // Action
-            const response = await server.inject({
-                url: `/threads/${threadId}/comments/${commentId}`,
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+    });
 
-            // Assert
-            const responseJson = JSON.parse(response.payload)
-            expect(response.statusCode).toEqual(404)
-            expect(responseJson.status).toEqual('fail')
-        })
-        it('should response 200 when success deleted comment', async () => {
-            // Arrange
-            const commentId = 'comment-123'
-            const threadId = 'thread-123'
-            await ThreadsTableTestHelper.addThread({})
-            await CommentsTableTestHelper.addComment({})
+    it('should response 200 and return success', async () => {
+      // Arrange
+      const commentId = 'comment-123';
+      const threadId = 'thread-123';
 
-            const server = await createServer(container)
+      await ThreadsTableTestHelper.addThread({});
+      await CommentsTableTestHelper.addComment({});
 
-            const accessToken = await ServerTestHelper.getAccessToken()
+      const server = await createServer(container);
 
-            // Action
-            const response = await server.inject({
-                method: 'DELETE',
-                url: `/threads/${threadId}/comments/${commentId}`,
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
+      const accessToken = await ServerTableTestHelper.getAccessToken();
 
-            // Assert
-            const responseJson = JSON.parse(response.payload)
-            expect(response.statusCode).toEqual(200)
-            expect(responseJson.status).toEqual('success')
-        })
-    })
-})
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+    });
+  });
+});

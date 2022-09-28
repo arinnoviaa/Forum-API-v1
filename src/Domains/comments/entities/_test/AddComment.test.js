@@ -1,32 +1,34 @@
 const AddComment = require('../AddComment');
 
-describe('an addComment entities', () => {
+describe('an AddComment entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     // Arrange
-    const payload = {};
+    const payload = {
+      thread: 'thread-123',
+    };
 
-    // Action & Assert
+    // Action and Assert
     expect(() => new AddComment(payload)).toThrowError('ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
-  it('should throw error when payload did not meet data type spesification', () => {
+  it('should throw error when payload did not meet data type specification', () => {
     // Arrange
     const payload = {
-      content: 'sebuah komentar',
-      owner: true,
-      thread: 123,
+      thread: 'thread-123',
+      owner: [],
+      content: 'nice comment, right?',
     };
 
-    // Action & Assert
+    // Action and Assert
     expect(() => new AddComment(payload)).toThrowError('ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
   it('should create addComment object correctly', () => {
     // Arrange
     const payload = {
-      content: 'sebuah komentar',
-      owner: 'user-123',
       thread: 'thread-123',
+      owner: 'user-123',
+      content: 'nice comment, right?',
     };
 
     // Action
